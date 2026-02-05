@@ -7,6 +7,7 @@ const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig, loadConfig } = 
 const { shouldBeActive, getCurrentStatus } = require('../src/scheduler');
 const { run } = require('../src/runner');
 const { createSlackClient, setStatus: slackSetStatus, validateToken } = require('../src/slack');
+const { startDaemon, stopDaemon, daemonStatus, LOG_FILE } = require('../src/daemon');
 
 program
   .name('slackgreen')
@@ -54,7 +55,7 @@ program
   .option('-d, --daemon', 'Run in background')
   .action(async (options) => {
     if (options.daemon) {
-      console.log('Daemon mode not yet implemented. Run without --daemon for now.');
+      startDaemon();
       return;
     }
 
@@ -75,16 +76,28 @@ program
       const now = new Date();
       const active = shouldBeActive(now, config);
       const status = getCurrentStatus(now, config);
+      const daemon = daemonStatus();
 
       console.log('\nSlackGreen Status\n');
       console.log(`Current time: ${now.toLocaleString()}`);
       console.log(`Work hours: ${config.workHours.start} - ${config.workHours.end}`);
       console.log(`Active: ${active ? 'Yes' : 'No (outside work hours or weekend)'}`);
       console.log(`Current status: ${status.emoji} ${status.text}`);
+      console.log(`Daemon: ${daemon.running ? `Running (PID: ${daemon.pid})` : 'Not running'}`);
+      if (daemon.running) {
+        console.log(`Logs: ${LOG_FILE}`);
+      }
       console.log(`Config: ${getConfigPath()}`);
     } catch (err) {
       console.error('Error:', err.message);
     }
+  });
+
+program
+  .command('stop')
+  .description('Stop SlackGreen daemon')
+  .action(() => {
+    stopDaemon();
   });
 
 program
