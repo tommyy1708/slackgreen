@@ -6,6 +6,7 @@ const readline = require('readline');
 const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig, loadConfig } = require('../src/config');
 const { shouldBeActive, getCurrentStatus } = require('../src/scheduler');
 const { run } = require('../src/runner');
+const { createSlackClient, setStatus: slackSetStatus, validateToken } = require('../src/slack');
 
 program
   .name('slackgreen')
@@ -83,6 +84,27 @@ program
       console.log(`Config: ${getConfigPath()}`);
     } catch (err) {
       console.error('Error:', err.message);
+    }
+  });
+
+program
+  .command('set')
+  .description('Manually set Slack status')
+  .requiredOption('-e, --emoji <emoji>', 'Status emoji (e.g., :coffee:)')
+  .requiredOption('-t, --text <text>', 'Status text')
+  .action(async (options) => {
+    try {
+      const config = loadConfig();
+      const client = createSlackClient(config.slackToken);
+
+      console.log('Validating token...');
+      await validateToken(client);
+
+      await slackSetStatus(client, options.emoji, options.text);
+      console.log(`Status set: ${options.emoji} ${options.text}`);
+    } catch (err) {
+      console.error('Error:', err.message);
+      process.exit(1);
     }
   });
 
