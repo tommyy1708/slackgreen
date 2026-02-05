@@ -4,6 +4,7 @@ const { program } = require('commander');
 const fs = require('fs');
 const readline = require('readline');
 const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig } = require('../src/config');
+const { run } = require('../src/runner');
 
 program
   .name('slackgreen')
@@ -43,6 +44,24 @@ program
     console.log(`\nConfig saved to ${configPath}`);
     console.log('Edit this file to customize your schedule.');
     console.log('Run "slackgreen start" to begin.');
+  });
+
+program
+  .command('start')
+  .description('Start SlackGreen')
+  .option('-d, --daemon', 'Run in background')
+  .action(async (options) => {
+    if (options.daemon) {
+      console.log('Daemon mode not yet implemented. Run without --daemon for now.');
+      return;
+    }
+
+    try {
+      await run();
+    } catch (err) {
+      console.error('Error:', err.message);
+      process.exit(1);
+    }
   });
 
 program.parse();
