@@ -1,8 +1,8 @@
 {
   "name": "slackgreen",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Keep Slack status green and manage scheduled status changes",
+  "main": "bin/slackgreen.js",
   "directories": {
     "doc": "docs"
   },
