@@ -3,7 +3,8 @@
 const { program } = require('commander');
 const fs = require('fs');
 const readline = require('readline');
-const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig } = require('../src/config');
+const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig, loadConfig } = require('../src/config');
+const { shouldBeActive, getCurrentStatus } = require('../src/scheduler');
 const { run } = require('../src/runner');
 
 program
@@ -61,6 +62,27 @@ program
     } catch (err) {
       console.error('Error:', err.message);
       process.exit(1);
+    }
+  });
+
+program
+  .command('status')
+  .description('Show current SlackGreen status')
+  .action(() => {
+    try {
+      const config = loadConfig();
+      const now = new Date();
+      const active = shouldBeActive(now, config);
+      const status = getCurrentStatus(now, config);
+
+      console.log('\nSlackGreen Status\n');
+      console.log(`Current time: ${now.toLocaleString()}`);
+      console.log(`Work hours: ${config.workHours.start} - ${config.workHours.end}`);
+      console.log(`Active: ${active ? 'Yes' : 'No (outside work hours or weekend)'}`);
+      console.log(`Current status: ${status.emoji} ${status.text}`);
+      console.log(`Config: ${getConfigPath()}`);
+    } catch (err) {
+      console.error('Error:', err.message);
     }
   });
 
