@@ -96,8 +96,8 @@ Config file: `~/.slackgreen/config.json`
   },
   "presencePingInterval": 5,
   "defaultStatus": {
-    "emoji": ":large_green_circle:",
-    "text": "Available"
+    "emoji": "",
+    "text": ""
   },
   "statusOverrides": [
     {

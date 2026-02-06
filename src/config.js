@@ -13,8 +13,8 @@ const DEFAULT_CONFIG = {
   },
   presencePingInterval: 5,
   defaultStatus: {
-    emoji: ':large_green_circle:',
-    text: 'Available'
+    emoji: '',
+    text: ''
   },
   statusOverrides: [
     {
