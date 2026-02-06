@@ -8,14 +8,15 @@ Keep your Slack status green during work hours and manage scheduled status chang
 
 Download the pre-built executable for your platform from the [Releases](https://github.com/tommyy1708/slackgreen/releases) page:
 
-- **macOS**: `slackgreen-macos`
+- **macOS (Apple Silicon M1/M2/M3)**: `slackgreen-macos-arm64`
+- **macOS (Intel)**: `slackgreen-macos-x64`
 - **Windows**: `slackgreen-win.exe`
 - **Linux**: `slackgreen-linux`
 
 Make it executable (macOS/Linux):
 ```bash
-chmod +x slackgreen-macos
-./slackgreen-macos init
+chmod +x slackgreen-macos-arm64
+./slackgreen-macos-arm64 init
 ```
 
 On Windows, just run:
