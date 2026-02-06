@@ -2,8 +2,20 @@
 
 const { program } = require('commander');
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
 const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig, loadConfig } = require('../src/config');
+
+// Get the command name based on how the script is run
+function getCommandName() {
+  const scriptPath = process.argv[1];
+  const basename = path.basename(scriptPath);
+  // If running as standalone executable or via node
+  if (basename.startsWith('slackgreen')) {
+    return `./${basename}`;
+  }
+  return 'slackgreen';
+}
 const { shouldBeActive, getCurrentStatus } = require('../src/scheduler');
 const { run } = require('../src/runner');
 const { createSlackClient, setStatus: slackSetStatus, validateToken } = require('../src/slack');
@@ -46,7 +58,7 @@ program
 
     console.log(`\nConfig saved to ${configPath}`);
     console.log('Edit this file to customize your schedule.');
-    console.log('Run "slackgreen start" to begin.');
+    console.log(`Run "${getCommandName()} start" to begin.`);
   });
 
 program
