@@ -8,10 +8,14 @@ const { DEFAULT_CONFIG, getConfigPath, getConfigDir, saveConfig, loadConfig } = 
 
 // Get the command name based on how the script is run
 function getCommandName() {
+  // Check if running as pkg executable (pkg sets process.pkg)
+  if (process.pkg) {
+    return `./${path.basename(process.execPath)}`;
+  }
+  // Check if running via node with full path
   const scriptPath = process.argv[1];
   const basename = path.basename(scriptPath);
-  // If running as standalone executable or via node
-  if (basename.startsWith('slackgreen')) {
+  if (basename.startsWith('slackgreen') && !basename.endsWith('.js')) {
     return `./${basename}`;
   }
   return 'slackgreen';
