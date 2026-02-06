@@ -3,18 +3,24 @@
   "version": "1.0.0",
   "description": "Keep Slack status green and manage scheduled status changes",
   "main": "bin/slackgreen.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "pkg . --targets node18-macos-x64,node18-win-x64,node18-linux-x64 --out-path dist",
+    "build:macos": "pkg . --targets node18-macos-x64 --output dist/slackgreen-macos",
+    "build:win": "pkg . --targets node18-win-x64 --output dist/slackgreen-win.exe",
+    "build:linux": "pkg . --targets node18-linux-x64 --output dist/slackgreen-linux"
   },
-  "keywords": [],
+  "keywords": ["slack", "status", "cli", "automation"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "bin": {
     "slackgreen": "./bin/slackgreen.js"
+  },
+  "pkg": {
+    "scripts": "src/**/*.js",
+    "assets": [],
+    "targets": ["node18-macos-x64", "node18-win-x64", "node18-linux-x64"]
   },
   "dependencies": {
     "@slack/web-api": "^7.13.0",
@@ -22,6 +28,7 @@
     "node-schedule": "^2.1.1"
   },
   "devDependencies": {
-    "jest": "^30.2.0"
+    "jest": "^30.2.0",
+    "pkg": "^5.8.1"
   }
 }
